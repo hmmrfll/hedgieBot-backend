@@ -41,7 +41,11 @@ router.post('/:telegramId/tracks', async (req, res) => {
 	try {
 		const user = await User.findOne({ telegramId })
 		if (user) {
-			user.tracks.push(newTrack)
+			user.tracks.push({
+				...newTrack,
+				lastPrice: newTrack.lastPrice || 0,
+				notificationThreshold: newTrack.notificationThreshold || 0,
+			})
 			await user.save()
 			console.log('Track added:', newTrack)
 			res.status(201).json(newTrack) // Returning only the added track
